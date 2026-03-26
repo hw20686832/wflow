@@ -1,0 +1,29 @@
+name: workflow_b
+schedule: "30 */2 * * *"
+executor: local
+async: False
+logdir: var/log/workflow_b
+mailto: ['admin@example.com']
+resume: false
+
+env:
+  PYTHONPATH: /data/projects
+
+type: serialFlow
+tasks:
+  -
+    name: wait_for_workflow_a
+    command: ['echo', 'Waiting for workflow_a to complete']
+    deps: ['workflow_a:validate_data']
+
+  -
+    name: process_workflow_a_output
+    command: ['python3', 'process_output.py']
+    retry_count: 2
+    retry_interval: 5
+
+  -
+    name: generate_report
+    command: ['python3', 'report.py']
+    retry_count: 1
+    retry_interval: 3

@@ -1,0 +1,30 @@
+name: workflow_a
+schedule: "0 */2 * * *"
+executor: local
+async: False
+logdir: var/log/workflow_a
+mailto: ['admin@example.com']
+resume: false
+
+env:
+  PYTHONPATH: /data/projects
+
+type: serialFlow
+tasks:
+  -
+    name: prepare_data
+    command: ['python3', 'prepare.py']
+    retry_count: 2
+    retry_interval: 5
+
+  -
+    name: transform_data
+    command: ['python3', 'transform.py']
+    retry_count: 3
+    retry_interval: 10
+
+  -
+    name: validate_data
+    command: ['python3', 'validate.py']
+    retry_count: 1
+    retry_interval: 3

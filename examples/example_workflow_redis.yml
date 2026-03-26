@@ -1,0 +1,60 @@
+name: example_workflow_redis
+schedule: "*/5 * * * *"
+executor: local
+async: False
+logdir: var/log/example_redis
+mailto: ['admin@example.com']
+resume: false
+
+state_backend: redis
+redis_host: localhost
+redis_port: 6379
+redis_db: 0
+redis_password: null
+
+env:
+  JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+  PATH: ${ENV_PATH}:/data/Python3/bin
+
+type: serialFlow
+tasks:
+  -
+    name: data_extraction
+    command: ['python3', 'extract_data.py']
+    retry_count: 3
+    retry_interval: 10
+
+  -
+    name: parallel_processing
+    type: parallelFlow
+    tasks:
+      -
+        name: process_task1
+        command: ['python3', 'process.py', 'task1']
+        retry_count: 2
+        retry_interval: 5
+
+      -
+        name: process_task2
+        command: ['python3', 'process.py', 'task2']
+        retry_count: 2
+        retry_interval: 5
+
+      -
+        name: process_task3
+        command: ['python3', 'process.py', 'task3']
+        retry_count: 1
+        retry_interval: 3
+
+  -
+    name: data_aggregation
+    command: ['python3', 'aggregate.py']
+    deps: ['process_task1', 'process_task2', 'process_task3']
+    retry_count: 3
+    retry_interval: 15
+
+  -
+    name: data_loading
+    command: ['python3', 'load_data.py']
+    retry_count: 2
+    retry_interval: 10
