@@ -67,7 +67,7 @@ class WorkflowHandler(BaseHandler):
             description = data.get('description')
             schedule = data.get('schedule')
             executor = data.get('executor', 'local')
-            async_flag = data.get('async', False)
+            async_flag = data.get('is_async', False)
             logdir = data.get('logdir')
             mailto = data.get('mailto')
             resume = data.get('resume', False)
@@ -123,8 +123,8 @@ class WorkflowHandler(BaseHandler):
             
             data = tornado.escape.json_decode(self.request.body)
             
-            for field in ['name', 'description', 'schedule', 'executor', 'is_async']: 
-                         'logdir', 'mailto', 'resume', 'env', 'type', 'is_active']:
+            for field in ['name', 'description', 'schedule', 'executor', 'is_async', 
+                    'logdir', 'mailto', 'resume', 'env', 'type', 'is_active']:
                 if field in data:
                     if field == 'is_async':
                         setattr(workflow, 'async', data[field])
@@ -374,7 +374,7 @@ class ImportExportHandler(BaseHandler):
                 'description': workflow.description,
                 'schedule': workflow.schedule,
                 'executor': workflow.executor,
-                'async': workflow.async,
+                'is_async': workflow.is_async,
                 'logdir': workflow.logdir,
                 'mailto': workflow.mailto,
                 'resume': workflow.resume,

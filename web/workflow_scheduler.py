@@ -3,7 +3,6 @@ import sys
 import os
 import yaml
 import tempfile
-import configparser
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 from pathlib import Path
@@ -15,19 +14,15 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from database.models import Workflow, Task, TaskExecution, TaskLog
 from database.db_manager import DatabaseManager
+from config.loader import get_config
 from lib import utils
 
 
 class WorkflowScheduler:
-    def __init__(self, db_manager: DatabaseManager):
+    def __init__(self, db_manager: DatabaseManager, config=None):
         self.db_manager = db_manager
-        self.config = self._load_config()
+        self.config = config or get_config()
         self.log = utils.get_log("WorkflowScheduler")
-        
-    def _load_config(self) -> configparser.ConfigParser:
-        config = configparser.ConfigParser()
-        config.read('conf/common.conf')
-        return config
     
     def _generate_workflow_yaml(self, workflow: Workflow) -> str:
         workflow_data = {

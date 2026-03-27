@@ -1,25 +1,30 @@
 #!/usr/bin/env python3
 import socket
 import subprocess
-import configparser
 from typing import Tuple, List
 
 import celery
 from celery.bin import worker
-
 from lib import utils
+from config.loader import get_config
 
 
-def load_redis_config() -> configparser.ConfigParser:
-    redis_conf = configparser.ConfigParser()
-    redis_conf.read("conf/redis.conf")
-    return redis_conf
+def load_redis_config() -> dict:
+    config = get_config()
+    redis_config = config.get('redis', {})
+    return {
+        'host': redis_config.get('host', 'localhost'),
+        'port': redis_config.get('port', 6379),
+        'db': redis_config.get('db', 0),
+        'password': redis_config.get('password', '')
+    }
 
 
 class CeleryConf:
-    def __init__(self, redis_conf: configparser.ConfigParser):
-        redis_config = redis_conf['default']
+    def __init__(self, redis_config: dict):
         self.BROKER_URL = f"redis://{redis_config['host']}:{redis_config['port']}/{redis_config['db']}"
+        if redis_config.get('password'):
+            self.BROKER_URL = f"redis://:{redis_config['password']}@{redis_config['host']}:{redis_config['port']}/{redis_config['db']}"
         self.CELERY_RESULT_BACKEND = f"redis://{redis_config['host']}:{redis_config['port']}/{redis_config['db']}"
         self.CELERY_TASK_RESULT_EXPIRES = 180
 
