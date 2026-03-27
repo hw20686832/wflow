@@ -42,7 +42,7 @@ class Workflow(Base):
     description = Column(Text)
     schedule = Column(String(100))
     executor = Column(String(50), default='local')
-    async = Column(Boolean, default=False)
+    is_async = Column(Boolean, default=False)
     logdir = Column(String(255))
     mailto = Column(JSON)
     resume = Column(Boolean, default=False)
@@ -64,7 +64,7 @@ class Workflow(Base):
             'description': self.description,
             'schedule': self.schedule,
             'executor': self.executor,
-            'async': self.async,
+            'is_async': self.is_async,
             'logdir': self.logdir,
             'mailto': self.mailto,
             'resume': self.resume,

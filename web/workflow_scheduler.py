@@ -34,7 +34,7 @@ class WorkflowScheduler:
             'name': workflow.name,
             'schedule': workflow.schedule,
             'executor': workflow.executor,
-            'async': workflow.async,
+            'is_async': workflow.is_async,
             'logdir': workflow.logdir or f'var/log/{workflow.name}',
             'mailto': workflow.mailto,
             'resume': workflow.resume,

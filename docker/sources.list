@@ -1,0 +1,17 @@
+# 阿里云 Debian 13  镜像源
+
+deb http://mirrors.aliyun.com/debian/ trixie main contrib non-free non-free-firmware
+
+deb-src http://mirrors.aliyun.com/debian/ trixie main contrib non-free non-free-firmware
+
+# 安全更新源
+
+deb http://mirrors.aliyun.com/debian-security/ trixie-security main contrib non-free non-free-firmware
+
+deb-src http://mirrors.aliyun.com/debian-security/ trixie-security main contrib non-free non-free-firmware
+
+# 稳定更新源
+
+deb http://mirrors.aliyun.com/debian/ trixie-updates main contrib non-free non-free-firmware
+
+deb-src http://mirrors.aliyun.com/debian/ trixie-updates main contrib non-free non-free-firmware
